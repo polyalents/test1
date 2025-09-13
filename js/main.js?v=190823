@@ -213,6 +213,74 @@ $(function() {
       el.style.removeProperty('height')
     }
   })
+  
+  // Улучшенная валидация телефона
+  $('input[type="tel"]').on('input', function(e) {
+    const phone = this.value.replace(/[^\d]/g, '');
+    let isValid = true;
+    
+    if (this.validity.patternMismatch && isValid) {
+      this.setCustomValidity('Укажите номер в формате мобильного оператора РФ');
+      isValid = false;
+    } 
+    // Дополнительная проверка кода оператора
+    else if (phone.length >= 2) {
+      const operatorCode = phone.charAt(1);
+      if (operatorCode !== '8' && operatorCode !== '9') {
+        this.setCustomValidity('Код оператора должен начинаться с 8 или 9');
+        isValid = false;
+      } else {
+        this.setCustomValidity('');
+        isValid = true;
+      }
+    } else {
+      this.setCustomValidity('');
+      isValid = true;
+    }
+  });
+
+  // Валидация при потере фокуса
+  $('input[type="tel"]').on('blur', function() {
+    const phone = this.value.replace(/[^\d]/g, '');
+    
+    if (phone.length > 0 && phone.length < 11) {
+      this.setCustomValidity('Номер должен содержать 11 цифр');
+    } else if (phone.length === 11) {
+      const operatorCode = phone.charAt(1);
+      if (operatorCode !== '8' && operatorCode !== '9') {
+        this.setCustomValidity('Код оператора должен начинаться с 8 или 9');
+      } else {
+        this.setCustomValidity('');
+      }
+    }
+  });
+
+  // Дополнительная валидация при отправке формы
+  $('form').on('submit', function(e) {
+    const telInputs = $(this).find('input[type="tel"]');
+    
+    telInputs.each(function() {
+      const phone = this.value.replace(/[^\d]/g, '');
+      
+      // Проверяем что номер начинается с 7 и второй символ 8 или 9
+      if (phone.length === 11 && phone.startsWith('7')) {
+        const operatorCode = phone.charAt(1);
+        if (operatorCode !== '8' && operatorCode !== '9') {
+          e.preventDefault();
+          this.setCustomValidity('Укажите номер с корректным кодом оператора (8** или 9**)');
+          this.reportValidity();
+          return false;
+        } else {
+          this.setCustomValidity('');
+        }
+      } else if (phone.length > 0) {
+        e.preventDefault();
+        this.setCustomValidity('Укажите корректный номер телефона');
+        this.reportValidity();
+        return false;
+      }
+    });
+  });
 })
 
 

@@ -84,7 +84,7 @@ _tmr.push({id: "3486291", type: "pageView", start: (new Date()).getTime()});
       <a class="popup_exit" href="javascript:PopUpHide();">×</a>
       <p class="popup_content_name" id="popup_content_name">Оставьте свой номер</p>
       <form class="popupform" id="form" name="form">
-        <input type="tel" name="telephone" id="telpopup" pattern="^\+\d{1}\((831|495|499|9\d{2})\)\s\d{3}-\d{2}-\d{2}$" value=""
+        <input type="tel" name="telephone" id="telpopup" pattern="^\+7\([89]\d{2}\)\s\d{3}-\d{2}-\d{2}$" value=""
           placeholder="+7(___) ___-__-__" required>
         <input type="text" name="nameForm" id="nameForm" value="" style="display:none;">
         <div class="popup_content_form_input">
@@ -932,7 +932,7 @@ _tmr.push({id: "3486291", type: "pageView", start: (new Date()).getTime()});
             <div class="form_item">
               <p>Контактный телефон</p>
               <input type="tel" name="telephone" placeholder="+7(___) ___-__-__" required
-                pattern="^\+\d{1}\((831|495|499|9\d{2})\)\s\d{3}-\d{2}-\d{2}$">
+                pattern="^\+7\([89]\d{2}\)\s\d{3}-\d{2}-\d{2}$">
             </div>
             <button class="btn btn--primary with-arrow" type="submit" name="button">Рассчитать платеж</button>
           </form>
@@ -961,7 +961,7 @@ _tmr.push({id: "3486291", type: "pageView", start: (new Date()).getTime()});
             <div class="form_item">
               <p>Контактный телефон</p>
               <input type="tel" name="telephone" placeholder="+7(___) ___-__-__" required
-                pattern="^\+\d{1}\((831|495|499|9\d{2})\)\s\d{3}-\d{2}-\d{2}$">
+                pattern="^\+7\([89]\d{2}\)\s\d{3}-\d{2}-\d{2}$">
             </div>
             <button class="btn btn--primary with-arrow" style="width: 100%" type="submit" name="button">Отправить</button>
           </form>
@@ -1068,152 +1068,181 @@ _tmr.push({id: "3486291", type: "pageView", start: (new Date()).getTime()});
         }
       })
       $('#form').submit(function (e) {
-        e.preventDefault()
-        e.stopImmediatePropagation()
+  e.preventDefault();
+  e.stopImmediatePropagation();
 
-        if ($(this).find('button[type="submit"]').attr('disabled')) {
-          return
-        }
+  if ($(this).find('button[type="submit"]').attr('disabled')) {
+    return false;
+  }
 
-        $(this).find('button[type="submit"]').attr('disabled', true)
-        $.post(
-          'main.php', // адрес обработчика
-          $("#form").serialize(), // отправляемые данные
+  // Проверяем валидность всех полей
+  let isValid = true;
+  $(this).find('input[required]').each(function() {
+    if (!this.checkValidity()) {
+      this.reportValidity();
+      isValid = false;
+      return false;
+    }
+  });
 
-          function (msg) { // получен ответ сервера
-            PopUpHide();
-            PopUpShow2();
-            setTimeout(function () {
+  if (!isValid) {
+    return false;
+  }
 
-              $('button[type="submit"]').removeAttr('disabled')
-              PopUpHide2()
+  $(this).find('button[type="submit"]').attr('disabled', true);
+  
+  // Имитация успешной отправки
+  PopUpHide();
+  PopUpShow2();
+  
+  setTimeout(function () {
+    $('button[type="submit"]').removeAttr('disabled');
+    PopUpHide2();
+  }, 2500);
 
-            }, 2500);
+  ym(94626183,'reachGoal','ORDER');
+  return false;
+});
 
-          }
-        );
+$('#form2').submit(function (e) {
+  e.preventDefault();
+  e.stopImmediatePropagation();
 
-        ym(91554494,'reachGoal','ORDER')
+  if ($(this).find('button[type="submit"]').attr('disabled')) {
+    return false;
+  }
 
-        return false;
-      });
-      $('#form2').submit(function (e) {
-        e.preventDefault()
-        e.stopImmediatePropagation()
+  let isValid = true;
+  $(this).find('input[required]').each(function() {
+    if (!this.checkValidity()) {
+      this.reportValidity();
+      isValid = false;
+      return false;
+    }
+  });
 
-        if ($(this).find('button[type="submit"]').attr('disabled')) {
-          return
-        }
+  if (!isValid) {
+    return false;
+  }
 
-        $(this).find('button[type="submit"]').attr('disabled', true)
-        $.post(
-          'main.php', // адрес обработчика
-          $("#form2").serialize(), // отправляемые данные
+  $(this).find('button[type="submit"]').attr('disabled', true);
+  
+  PopUpHide();
+  PopUpShow2();
+  
+  setTimeout(function () {
+    $('button[type="submit"]').removeAttr('disabled');
+    PopUpHide2();
+  }, 2500);
 
-          function (msg) { // получен ответ сервера
-            PopUpHide();
-            PopUpShow2();
-            setTimeout(function () {
+  ym(94626183,'reachGoal','ORDER');
+  return false;
+});
 
-              $('button[type="submit"]').removeAttr('disabled')
-              PopUpHide2()
+$('#form5').submit(function (e) {
+  e.preventDefault();
+  e.stopImmediatePropagation();
 
-            }, 2500);
+  if ($(this).find('button[type="submit"]').attr('disabled')) {
+    return false;
+  }
 
-          }
-        );
+  let isValid = true;
+  $(this).find('input[required]').each(function() {
+    if (!this.checkValidity()) {
+      this.reportValidity();
+      isValid = false;
+      return false;
+    }
+  });
 
-        ym(91554494,'reachGoal','ORDER')
+  if (!isValid) {
+    return false;
+  }
 
-        return false;
-      });
-      $('#form5').submit(function (e) {
-        e.preventDefault()
-        e.stopImmediatePropagation()
+  $(this).find('button[type="submit"]').attr('disabled', true);
+  
+  PopUpHide();
+  PopUpShow2();
+  
+  setTimeout(function () {
+    $('button[type="submit"]').removeAttr('disabled');
+    PopUpHide2();
+  }, 2500);
 
-        if ($(this).find('button[type="submit"]').attr('disabled')) {
-          return
-        }
+  ym(94626183,'reachGoal','ORDER');
+  return false;
+});
 
-        $(this).find('button[type="submit"]').attr('disabled', true)
-        $.post(
-          'main4.php', // адрес обработчика
-          $("#form5").serialize(), // отправляемые данные
+$('#form4').submit(function (e) {
+  e.preventDefault();
+  e.stopImmediatePropagation();
 
-          function (msg) { // получен ответ сервера
-            PopUpHide();
-            PopUpShow2();
-            setTimeout(function () {
+  if ($(this).find('button[type="submit"]').attr('disabled')) {
+    return false;
+  }
 
-              $('button[type="submit"]').removeAttr('disabled')
-              PopUpHide2()
+  let isValid = true;
+  $(this).find('input[required]').each(function() {
+    if (!this.checkValidity()) {
+      this.reportValidity();
+      isValid = false;
+      return false;
+    }
+  });
 
-            }, 2500);
-          }
-        );
+  if (!isValid) {
+    return false;
+  }
 
-        ym(91554494,'reachGoal','ORDER')
+  $(this).find('button[type="submit"]').attr('disabled', true);
+  
+  PopUpHide();
+  PopUpShow2();
+  
+  setTimeout(function () {
+    $('button[type="submit"]').removeAttr('disabled');
+    PopUpHide2();
+  }, 2500);
 
-        return false;
-      });
-      $('#form4').submit(function (e) {
-        e.preventDefault()
-        e.stopImmediatePropagation()
+  ym(94626183,'reachGoal','ORDER');
+  return false;
+});
 
-        if ($(this).find('button[type="submit"]').attr('disabled')) {
-          return
-        }
+$('#form3').submit(function (e) {
+  e.preventDefault();
+  e.stopImmediatePropagation();
 
-        $(this).find('button[type="submit"]').attr('disabled', true)
-        $.post(
-          'main2.php', // адрес обработчика
-          $("#form4").serialize(), // отправляемые данные
+  if ($(this).find('button[type="submit"]').attr('disabled')) {
+    return false;
+  }
 
-          function (msg) { // получен ответ сервера
-            PopUpHide();
-            PopUpShow2();
-            setTimeout(function () {
+  let isValid = true;
+  $(this).find('input[required]').each(function() {
+    if (!this.checkValidity()) {
+      this.reportValidity();
+      isValid = false;
+      return false;
+    }
+  });
 
-              $('button[type="submit"]').removeAttr('disabled')
-              PopUpHide2()
+  if (!isValid) {
+    return false;
+  }
 
-            }, 2500);
-          }
-        );
+  $(this).find('button[type="submit"]').attr('disabled', true);
+  
+  PopUpHide();
+  PopUpShow2();
+  
+  setTimeout(function () {
+    $('button[type="submit"]').removeAttr('disabled');
+    PopUpHide2();
+  }, 2500);
 
-        ym(91554494,'reachGoal','ORDER')
-
-        return false;
-      });
-      $('#form3').submit(function (e) {
-        e.preventDefault()
-        e.stopImmediatePropagation()
-
-        if ($(this).find('button[type="submit"]').attr('disabled')) {
-          return
-        }
-
-        $(this).find('button[type="submit"]').attr('disabled', true)
-        $.post(
-          'main3.php', // адрес обработчика
-          $("#form3").serialize(), // отправляемые данные
-
-          function (msg) { // получен ответ сервера
-            PopUpHide();
-            PopUpShow2();
-            setTimeout(function () {
-
-              $('button[type="submit"]').removeAttr('disabled')
-              PopUpHide2()
-
-            }, 2500);
-          }
-        );
-
-        ym(91554494,'reachGoal','ORDER')
-
-        return false;
-      });
+  ym(94626183,'reachGoal','ORDER');
+  return false;
+});
     </script>
     <script type="text/javascript">
       (function (d, w) {
@@ -1230,14 +1259,57 @@ _tmr.push({id: "3486291", type: "pageView", start: (new Date()).getTime()});
       })(document, window);
     </script>
 
-    <script type="text/javascript">
-      var inputsTel = document.querySelectorAll('input[type="tel"]');
+<script type="text/javascript">
+  var inputsTel = document.querySelectorAll('input[type="tel"]');
 
-      Inputmask({
-        "mask": "+7(999) 999-99-99",
-        showMaskOnHover: false
-      }).mask(inputsTel);
-    </script>
+  Inputmask({
+    mask: "+7(999) 999-99-99",
+    placeholder: "+7(___) ___-__-__",
+    showMaskOnHover: false,
+    clearIncomplete: true,
+    onBeforePaste: function (pastedValue, opts) {
+      // Очищаем вставляемое значение от лишних символов
+      var cleaned = pastedValue.replace(/[^\d]/g, '');
+      // Если номер начинается с 8, заменяем на 7
+      if (cleaned.startsWith('8')) {
+        cleaned = '7' + cleaned.substring(1);
+      }
+      // Если номер начинается с +7, убираем +
+      if (cleaned.startsWith('7')) {
+        cleaned = cleaned.substring(1);
+      }
+      return cleaned;
+    },
+    onKeyDown: function(event, buffer, caretPos, opts) {
+      // Блокируем ввод неправильных кодов операторов
+      var key = String.fromCharCode(event.keyCode);
+      var unmasked = this.inputmask.unmaskedvalue();
+      
+      // Проверяем первую цифру после +7( - должна быть 8 или 9
+      if (unmasked.length === 0 && /[0-9]/.test(key)) {
+        if (key !== '8' && key !== '9') {
+          event.preventDefault();
+          return false;
+        }
+      }
+      return true;
+    },
+    onincomplete: function() {
+      this.setCustomValidity('Номер должен содержать 11 цифр');
+    },
+    oncomplete: function() {
+      const phone = this.inputmask.unmaskedvalue();
+      if (phone.length === 10) {
+        const operatorCode = phone.charAt(0);
+        if (operatorCode !== '8' && operatorCode !== '9') {
+          this.setCustomValidity('Код оператора должен начинаться с 8 или 9');
+        } else {
+          this.setCustomValidity('');
+        }
+      }
+    }
+  }).mask(inputsTel);
+</script>
 
  <!-- Top.Mail.Ru counter -->
 <script type="text/javascript">
