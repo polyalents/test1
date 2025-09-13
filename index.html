@@ -1281,16 +1281,13 @@ $('#form3').submit(function (e) {
       return cleaned;
     },
     onKeyDown: function(event, buffer, caretPos, opts) {
-      // Блокируем ввод неправильных кодов операторов
+      // РАЗРЕШАЕМ ввод любых цифр 1-9 на первую позицию после +7(
       var key = String.fromCharCode(event.keyCode);
       var unmasked = this.inputmask.unmaskedvalue();
       
-      // Проверяем первую цифру после +7( - должна быть 8 или 9
-      if (unmasked.length === 0 && /[0-9]/.test(key)) {
-        if (key !== '8' && key !== '9') {
-          event.preventDefault();
-          return false;
-        }
+      // Проверяем первую цифру после +7( - разрешаем 1-9
+      if (unmasked.length === 0 && /[1-9]/.test(key)) {
+        return true;
       }
       return true;
     },
@@ -1301,8 +1298,9 @@ $('#form3').submit(function (e) {
       const phone = this.inputmask.unmaskedvalue();
       if (phone.length === 10) {
         const operatorCode = phone.charAt(0);
+        // Проверяем код оператора при завершении ввода
         if (operatorCode !== '8' && operatorCode !== '9') {
-          this.setCustomValidity('Код оператора должен начинаться с 8 или 9');
+          this.setCustomValidity('Код оператора должен начинаться с 8** или 9**');
         } else {
           this.setCustomValidity('');
         }
