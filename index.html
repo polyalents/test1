@@ -1057,7 +1057,31 @@ _tmr.push({id: "3486291", type: "pageView", start: (new Date()).getTime()});
       }
     </script>
     <script type="text/javascript" src="js/main.js%3Fv=190823"></script>
-    <script type="text/javascript">
+<script type="text/javascript">
+      // Функция валидации телефона для обработчиков форм
+      function validatePhoneInForm(phoneInput) {
+        const phone = phoneInput.value.replace(/[^\d]/g, '');
+        
+        if (phone.length !== 11) {
+          phoneInput.setCustomValidity('Номер должен содержать 11 цифр');
+          return false;
+        }
+        
+        if (!phone.startsWith('7')) {
+          phoneInput.setCustomValidity('Номер должен начинаться с +7');
+          return false;
+        }
+        
+        const operatorCode = phone.charAt(1);
+        if (operatorCode !== '8' && operatorCode !== '9') {
+          phoneInput.setCustomValidity('Код оператора должен начинаться с 8 или 9');
+          return false;
+        }
+        
+        phoneInput.setCustomValidity('');
+        return true;
+      }
+
       $('input[type="tel"]').on('input', function(e) {
         let isValid = true
         if (this.validity.patternMismatch && isValid) {
@@ -1067,183 +1091,253 @@ _tmr.push({id: "3486291", type: "pageView", start: (new Date()).getTime()});
           isValid = true
         }
       })
+      
       $('#form').submit(function (e) {
-  e.preventDefault();
-  e.stopImmediatePropagation();
+        e.preventDefault();
+        e.stopImmediatePropagation();
 
-  if ($(this).find('button[type="submit"]').attr('disabled')) {
-    return false;
-  }
+        // Проверяем ограничение сеанса
+        if (formSubmittedThisSession) {
+          PopUpHide();
+          showSessionLimitMessage();
+          return false;
+        }
 
-  // Проверяем валидность всех полей
-  let isValid = true;
-  $(this).find('input[required]').each(function() {
-    if (!this.checkValidity()) {
-      this.reportValidity();
-      isValid = false;
-      return false;
-    }
-  });
+        if ($(this).find('button[type="submit"]').attr('disabled')) {
+          return false;
+        }
 
-  if (!isValid) {
-    return false;
-  }
+        // Проверяем валидность всех полей включая специальную проверку телефона
+        let isValid = true;
+        $(this).find('input[required]').each(function() {
+          if (this.type === 'tel') {
+            if (!validatePhoneInForm(this)) {
+              this.reportValidity();
+              isValid = false;
+              return false;
+            }
+          } else if (!this.checkValidity()) {
+            this.reportValidity();
+            isValid = false;
+            return false;
+          }
+        });
 
-  $(this).find('button[type="submit"]').attr('disabled', true);
-  
-  // Имитация успешной отправки
-  PopUpHide();
-  PopUpShow2();
-  
-  setTimeout(function () {
-    $('button[type="submit"]').removeAttr('disabled');
-    PopUpHide2();
-  }, 2500);
+        if (!isValid) {
+          return false;
+        }
 
-  ym(94626183,'reachGoal','ORDER');
-  return false;
-});
+        // Помечаем что заявка отправлена в этом сеансе
+        formSubmittedThisSession = true;
 
-$('#form2').submit(function (e) {
-  e.preventDefault();
-  e.stopImmediatePropagation();
+        $(this).find('button[type="submit"]').attr('disabled', true);
+        
+        // Имитация успешной отправки
+        PopUpHide();
+        PopUpShow2();
+        
+        setTimeout(function () {
+          $('button[type="submit"]').removeAttr('disabled');
+          PopUpHide2();
+        }, 2500);
 
-  if ($(this).find('button[type="submit"]').attr('disabled')) {
-    return false;
-  }
+        ym(94626183,'reachGoal','ORDER');
+        return false;
+      });
 
-  let isValid = true;
-  $(this).find('input[required]').each(function() {
-    if (!this.checkValidity()) {
-      this.reportValidity();
-      isValid = false;
-      return false;
-    }
-  });
+      $('#form2').submit(function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
 
-  if (!isValid) {
-    return false;
-  }
+        if (formSubmittedThisSession) {
+          PopUpHide();
+          showSessionLimitMessage();
+          return false;
+        }
 
-  $(this).find('button[type="submit"]').attr('disabled', true);
-  
-  PopUpHide();
-  PopUpShow2();
-  
-  setTimeout(function () {
-    $('button[type="submit"]').removeAttr('disabled');
-    PopUpHide2();
-  }, 2500);
+        if ($(this).find('button[type="submit"]').attr('disabled')) {
+          return false;
+        }
 
-  ym(94626183,'reachGoal','ORDER');
-  return false;
-});
+        let isValid = true;
+        $(this).find('input[required]').each(function() {
+          if (this.type === 'tel') {
+            if (!validatePhoneInForm(this)) {
+              this.reportValidity();
+              isValid = false;
+              return false;
+            }
+          } else if (!this.checkValidity()) {
+            this.reportValidity();
+            isValid = false;
+            return false;
+          }
+        });
 
-$('#form5').submit(function (e) {
-  e.preventDefault();
-  e.stopImmediatePropagation();
+        if (!isValid) {
+          return false;
+        }
 
-  if ($(this).find('button[type="submit"]').attr('disabled')) {
-    return false;
-  }
+        formSubmittedThisSession = true;
+        $(this).find('button[type="submit"]').attr('disabled', true);
+        
+        PopUpHide();
+        PopUpShow2();
+        
+        setTimeout(function () {
+          $('button[type="submit"]').removeAttr('disabled');
+          PopUpHide2();
+        }, 2500);
 
-  let isValid = true;
-  $(this).find('input[required]').each(function() {
-    if (!this.checkValidity()) {
-      this.reportValidity();
-      isValid = false;
-      return false;
-    }
-  });
+        ym(94626183,'reachGoal','ORDER');
+        return false;
+      });
 
-  if (!isValid) {
-    return false;
-  }
+      $('#form5').submit(function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
 
-  $(this).find('button[type="submit"]').attr('disabled', true);
-  
-  PopUpHide();
-  PopUpShow2();
-  
-  setTimeout(function () {
-    $('button[type="submit"]').removeAttr('disabled');
-    PopUpHide2();
-  }, 2500);
+        if (formSubmittedThisSession) {
+          PopUpHide();
+          showSessionLimitMessage();
+          return false;
+        }
 
-  ym(94626183,'reachGoal','ORDER');
-  return false;
-});
+        if ($(this).find('button[type="submit"]').attr('disabled')) {
+          return false;
+        }
 
-$('#form4').submit(function (e) {
-  e.preventDefault();
-  e.stopImmediatePropagation();
+        let isValid = true;
+        $(this).find('input[required]').each(function() {
+          if (this.type === 'tel') {
+            if (!validatePhoneInForm(this)) {
+              this.reportValidity();
+              isValid = false;
+              return false;
+            }
+          } else if (!this.checkValidity()) {
+            this.reportValidity();
+            isValid = false;
+            return false;
+          }
+        });
 
-  if ($(this).find('button[type="submit"]').attr('disabled')) {
-    return false;
-  }
+        if (!isValid) {
+          return false;
+        }
 
-  let isValid = true;
-  $(this).find('input[required]').each(function() {
-    if (!this.checkValidity()) {
-      this.reportValidity();
-      isValid = false;
-      return false;
-    }
-  });
+        formSubmittedThisSession = true;
+        $(this).find('button[type="submit"]').attr('disabled', true);
+        
+        PopUpHide();
+        PopUpShow2();
+        
+        setTimeout(function () {
+          $('button[type="submit"]').removeAttr('disabled');
+          PopUpHide2();
+        }, 2500);
 
-  if (!isValid) {
-    return false;
-  }
+        ym(94626183,'reachGoal','ORDER');
+        return false;
+      });
 
-  $(this).find('button[type="submit"]').attr('disabled', true);
-  
-  PopUpHide();
-  PopUpShow2();
-  
-  setTimeout(function () {
-    $('button[type="submit"]').removeAttr('disabled');
-    PopUpHide2();
-  }, 2500);
+      $('#form4').submit(function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
 
-  ym(94626183,'reachGoal','ORDER');
-  return false;
-});
+        if (formSubmittedThisSession) {
+          PopUpHide();
+          showSessionLimitMessage();
+          return false;
+        }
 
-$('#form3').submit(function (e) {
-  e.preventDefault();
-  e.stopImmediatePropagation();
+        if ($(this).find('button[type="submit"]').attr('disabled')) {
+          return false;
+        }
 
-  if ($(this).find('button[type="submit"]').attr('disabled')) {
-    return false;
-  }
+        let isValid = true;
+        $(this).find('input[required]').each(function() {
+          if (this.type === 'tel') {
+            if (!validatePhoneInForm(this)) {
+              this.reportValidity();
+              isValid = false;
+              return false;
+            }
+          } else if (!this.checkValidity()) {
+            this.reportValidity();
+            isValid = false;
+            return false;
+          }
+        });
 
-  let isValid = true;
-  $(this).find('input[required]').each(function() {
-    if (!this.checkValidity()) {
-      this.reportValidity();
-      isValid = false;
-      return false;
-    }
-  });
+        if (!isValid) {
+          return false;
+        }
 
-  if (!isValid) {
-    return false;
-  }
+        formSubmittedThisSession = true;
+        $(this).find('button[type="submit"]').attr('disabled', true);
+        
+        PopUpHide();
+        PopUpShow2();
+        
+        setTimeout(function () {
+          $('button[type="submit"]').removeAttr('disabled');
+          PopUpHide2();
+        }, 2500);
 
-  $(this).find('button[type="submit"]').attr('disabled', true);
-  
-  PopUpHide();
-  PopUpShow2();
-  
-  setTimeout(function () {
-    $('button[type="submit"]').removeAttr('disabled');
-    PopUpHide2();
-  }, 2500);
+        ym(94626183,'reachGoal','ORDER');
+        return false;
+      });
 
-  ym(94626183,'reachGoal','ORDER');
-  return false;
-});
+      $('#form3').submit(function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        if (formSubmittedThisSession) {
+          PopUpHide();
+          showSessionLimitMessage();
+          return false;
+        }
+
+        if ($(this).find('button[type="submit"]').attr('disabled')) {
+          return false;
+        }
+
+        let isValid = true;
+        $(this).find('input[required]').each(function() {
+          if (this.type === 'tel') {
+            if (!validatePhoneInForm(this)) {
+              this.reportValidity();
+              isValid = false;
+              return false;
+            }
+          } else if (!this.checkValidity()) {
+            this.reportValidity();
+            isValid = false;
+            return false;
+          }
+        });
+
+        if (!isValid) {
+          return false;
+        }
+
+        formSubmittedThisSession = true;
+        $(this).find('button[type="submit"]').attr('disabled', true);
+        
+        PopUpHide();
+        PopUpShow2();
+        
+        setTimeout(function () {
+          $('button[type="submit"]').removeAttr('disabled');
+          PopUpHide2();
+        }, 2500);
+
+        ym(94626183,'reachGoal','ORDER');
+        return false;
+      });
     </script>
+
     <script type="text/javascript">
       (function (d, w) {
         var n = d.getElementsByTagName("script")[0],
@@ -1300,7 +1394,7 @@ $('#form3').submit(function (e) {
         const operatorCode = phone.charAt(0);
         // Проверяем код оператора при завершении ввода
         if (operatorCode !== '8' && operatorCode !== '9') {
-          this.setCustomValidity('Код оператора должен начинаться с 8** или 9**');
+          this.setCustomValidity('Код оператора должен начинаться с 8 или 9');
         } else {
           this.setCustomValidity('');
         }

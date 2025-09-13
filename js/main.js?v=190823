@@ -11,6 +11,9 @@ let is_iOS = (() => {
   || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
 })()
 
+// Переменная для отслеживания отправки заявки в текущем сеансе
+let formSubmittedThisSession = false;
+
 // Функция валидации телефонного номера
 function validatePhoneNumber(input) {
   const phone = input.value.replace(/[^\d]/g, '');
@@ -36,7 +39,7 @@ function validatePhoneNumber(input) {
   // Проверяем код оператора (вторая цифра должна быть 8 или 9)
   const operatorCode = phone.charAt(1);
   if (operatorCode !== '8' && operatorCode !== '9') {
-    input.setCustomValidity('Код оператора должен начинаться с 8** или 9**');
+    input.setCustomValidity('Код оператора должен начинаться с 8 или 9');
     return false;
   }
   
@@ -45,7 +48,18 @@ function validatePhoneNumber(input) {
   return true;
 }
 
+// Функция показа сообщения об ограничении
+function showSessionLimitMessage() {
+  document.getElementById('popup_content_name').innerHTML = "Заявка уже отправлена";
+  document.getElementById('popupThanks').querySelector('.popup_content_tittle').innerHTML = "Вы уже отправили заявку в этом сеансе. Обновите страницу для повторной отправки или дождитесь звонка менеджера.";
+  $("#popupThanks").css('display', 'flex');
+}
+
 function PopUpShow() {
+  if (formSubmittedThisSession) {
+    showSessionLimitMessage();
+    return;
+  }
   document.getElementById('popup1').style.display = "flex";
   document.getElementById('nameForm').value = "Форма - заказать обратный звонок";
   document.getElementById('popup_content_name').innerHTML = "Заявка на обратный звонок";
@@ -54,6 +68,10 @@ function PopUpShow() {
   $('button[type="submit"]').removeAttr('disabled')
 }
 function PopUpShowMobile() {
+  if (formSubmittedThisSession) {
+    showSessionLimitMessage();
+    return;
+  }
   document.getElementById('popup1').style.display = "flex";
   document.getElementById('nameForm').value = "Форма - отавить заявку (на мобильных)";
   document.getElementById('popup_content_name').innerHTML = "Заявка на обратный звонок";
@@ -62,47 +80,59 @@ function PopUpShowMobile() {
   $('button[type="submit"]').removeAttr('disabled')
 }
 function PopUpShowTestDrive() {
+  if (formSubmittedThisSession) {
+    showSessionLimitMessage();
+    return;
+  }
   document.getElementById('popup1').style.display = "flex";
   document.getElementById('nameForm').value = "Форма - тест-драйв";
-  document.getElementById('popup_content_name').innerHTML = "Тест-драйв OMODA&nbsp;С5";
+  document.getElementById('popup_content_name').innerHTML = "Тест-драйв KAIYI";
   document.getElementById('popup_content_name').style.width="100%";
     document.getElementById('telpopup').focus();
   $('button[type="submit"]').removeAttr('disabled')
 }
 function PopUpShowService() {
+  if (formSubmittedThisSession) {
+    showSessionLimitMessage();
+    return;
+  }
   document.getElementById('popup1').style.display = "flex";
-  document.getElementById('nameForm').value = "Форма - сервис OMODA&nbsp;С5";
-  document.getElementById('popup_content_name').innerHTML = "Сервис OMODA&nbsp;С5";
+  document.getElementById('nameForm').value = "Форма - сервис KAIYI";
+  document.getElementById('popup_content_name').innerHTML = "Сервис KAIYI";
   document.getElementById('popup_content_name').style.width="100%";
     document.getElementById('telpopup').focus();
   $('button[type="submit"]').removeAttr('disabled')
 }
 function PopUpShowOtdel() {
+  if (formSubmittedThisSession) {
+    showSessionLimitMessage();
+    return;
+  }
   document.getElementById('popup1').style.display = "flex";
-  document.getElementById('nameForm').value = "Форма - Отдел продаж OMODA&nbsp;С5";
-  document.getElementById('popup_content_name').innerHTML = "Отдел продаж OMODA&nbsp;С5";
-  document.getElementById('popup_content_name').style.width="100%";
-    document.getElementById('telpopup').focus();
-  $('button[type="submit"]').removeAttr('disabled')
-}
-function PopUpShowService() {
-  document.getElementById('popup1').style.display = "flex";
-  document.getElementById('nameForm').value = "Форма - Сервисный центр OMODA&nbsp;С5";
-  document.getElementById('popup_content_name').innerHTML = "Сервисный центр OMODA&nbsp;С5";
+  document.getElementById('nameForm').value = "Форма - Отдел продаж KAIYI";
+  document.getElementById('popup_content_name').innerHTML = "Отдел продаж KAIYI";
   document.getElementById('popup_content_name').style.width="100%";
     document.getElementById('telpopup').focus();
   $('button[type="submit"]').removeAttr('disabled')
 }
 function PopUpShowConfig() {
+  if (formSubmittedThisSession) {
+    showSessionLimitMessage();
+    return;
+  }
   document.getElementById('popup1').style.display = "flex";
-  document.getElementById('nameForm').value = "Форма - Подбор конфигурации OMODA&nbsp;С5";
-  document.getElementById('popup_content_name').innerHTML = "Подбор конфигурации OMODA&nbsp;С5";
+  document.getElementById('nameForm').value = "Форма - Подбор конфигурации KAIYI";
+  document.getElementById('popup_content_name').innerHTML = "Подбор конфигурации KAIYI";
   document.getElementById('popup_content_name').style.width="100%";
     document.getElementById('telpopup').focus();
   $('button[type="submit"]').removeAttr('disabled')
 }
 
 function PopUpShowPred() {
+  if (formSubmittedThisSession) {
+    showSessionLimitMessage();
+    return;
+  }
   document.getElementById('popup1').style.display = "flex";
   document.getElementById('nameForm').value = "Форма - Получить спецпредложение";
   document.getElementById('popup_content_name').innerHTML = "Получить спецпредложение";
@@ -113,6 +143,10 @@ function PopUpShowPred() {
 
 
 function showCarPopup(title, title2 = '') {
+  if (formSubmittedThisSession) {
+    showSessionLimitMessage();
+    return;
+  }
   document.getElementById('popup1').style.display = "flex";
   document.getElementById('nameForm').value = `Форма - ${title} ${title2}`;
   document.getElementById('popup_content_name').innerHTML = `${title} \r\n ${title2}`;
@@ -259,6 +293,15 @@ $(function() {
 
   // Дополнительная валидация при отправке формы
   $('form').on('submit', function(e) {
+    // Проверяем, не была ли уже отправлена заявка в этом сеансе
+    if (formSubmittedThisSession) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      PopUpHide();
+      showSessionLimitMessage();
+      return false;
+    }
+    
     const telInputs = $(this).find('input[type="tel"]');
     
     telInputs.each(function() {
@@ -268,6 +311,11 @@ $(function() {
         return false;
       }
     });
+    
+    // Если форма проходит валидацию, помечаем что заявка отправлена
+    if (!e.isDefaultPrevented()) {
+      formSubmittedThisSession = true;
+    }
   });
 })
 
